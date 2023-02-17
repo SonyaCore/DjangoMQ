@@ -10,9 +10,10 @@ class Inbox(models.Model):
     def __str__(self):
         return self.subject
 
+
 class InboxUser(models.Model):
-    user_id = models.IntegerField( blank=True)
+    user_id = models.IntegerField(blank=True)
     message_id = models.IntegerField(unique=True, blank=True)
 
     def __str__(self):
-        return f"User id {str(self.user_id)} Message ID {str(self.quote_id)}"
+        return f"User id {str(self.user_id)} Message ID {str(self.message_id)}"

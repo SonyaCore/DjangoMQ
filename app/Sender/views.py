@@ -20,7 +20,7 @@ class SenderViewset(viewsets.ViewSet):
         serializer = SenderSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        publish('message_created', serializer.data)
+        publish("message_created", serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def retrieve(self, request, pk=None):
@@ -33,26 +33,30 @@ class SenderViewset(viewsets.ViewSet):
         serializer = SenderSerializer(instance=product, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        publish('message_updated', serializer.data)
+        publish("message_updated", serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request, pk=None):
         product = Sender.objects.get(pk=pk)
         product.delete()
-        publish('message_deleted', pk)
-        
-        return Response('Message deleted')
+        publish("message_deleted", pk)
+
+        return Response("Message deleted")
+
 
 class UserAPIView(APIView):
     def get(self, _):
         users = User.objects.all()
         return Response(UserSerializer(users).data)
+
+
 class UserDetailAPIView(APIView):
     def get_user(self, pk):
         try:
             User.objects.get(pk=pk)
         except User.DoesNotExist:
             raise Http404
+
     def get(self, request, pk, format=None):
         user = self.get_user(pk)
         serializer = UserSerializer(user)

@@ -54,7 +54,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware"
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "djangomq.urls"
@@ -85,19 +85,19 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
-        'HOST': 'sqlite', 
+        "HOST": "sqlite",
     }
 }
 
-# DATABASES = { 
+# DATABASES = {
 #     'default': {
-#     'ENGINE'  : 'django.db.backends.mysql', 
+#     'ENGINE'  : 'django.db.backends.mysql',
 #     'NAME'    : 'djangoapp',
 #     'USER'    : 'root',
 #     'PASSWORD': 'root',
 #     'HOST'    : 'mysql_db',
 #     'PORT'    :  3306,
-#         }, 
+#         },
 #     }
 
 # Password validation
