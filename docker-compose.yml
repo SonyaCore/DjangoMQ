@@ -1,0 +1,74 @@
+version: "3.8"
+services:
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    hostname: rabbitmq
+    networks:
+      - djangonetwork
+
+  consumer:
+    build:
+      context: app
+      target: builder
+    tty: true
+    command: -c "/app/wait-for-it.sh rabbitmq:5672 --timeout=30 -- python3 consumer.py"
+    environment:
+      - HOSTNAMERABBIT=rabbitmq
+    depends_on:
+      - rabbitmq
+      # - mysql_db
+    hostname: consumer
+    volumes:
+      - ./db.sqlite3:/app/db.sqlite3
+      - ./config.env:/app/djangomq/.env
+    ports:
+      - "4040:4040"
+    networks:
+      - djangonetwork
+      - db_network
+
+  django:
+    build:
+      context: app
+      target: builder
+    tty: true
+    command: -c "/app/wait-for-it.sh rabbitmq:5672 --timeout=30 -- python3 manage.py makemigrations && python3 manage.py migrate && python3  manage.py runserver 0.0.0.0:8080"
+    environment:
+      - HOSTNAMERABBIT=rabbitmq
+    ports:
+      - "8080:8080"
+    hostname: django
+    volumes:
+      - ./db.sqlite3:/app/db.sqlite3
+      - ./config.env:/app/djangomq/.env
+    depends_on:
+      - rabbitmq
+      - consumer
+      # - mysql_db
+    networks:
+      - djangonetwork
+      - db_network
+
+  # mysql_db:
+  #   container_name: "mysql_db"
+  #   image: mysql
+  #   ports:
+  #     - "3306:3306"
+  #   env_file: .db.env
+  #   networks:
+  #     - db_network
+
+networks:
+  db_network:
+    driver: bridge
+  djangonetwork:
+    driver: bridge
