@@ -26,6 +26,7 @@ services:
     depends_on:
       - rabbitmq
       # - mysql_db
+    env_file: config.env
     hostname: consumer
     volumes:
       - ./db.sqlite3:/app/db.sqlite3
@@ -41,15 +42,17 @@ services:
       context: app
       target: builder
     tty: true
-    command: -c "/app/wait-for-it.sh rabbitmq:5672 --timeout=30 -- python3 manage.py makemigrations && python3 manage.py migrate && python3  manage.py runserver 0.0.0.0:8080"
+    command: -c "/app/wait-for-it.sh rabbitmq:5672 --timeout=30 -- /bin/bash runner.sh && python3 manage.py runserver 0.0.0.0:8080"
     environment:
       - HOSTNAMERABBIT=rabbitmq
     ports:
       - "8080:8080"
     hostname: django
+    env_file: config.env
     volumes:
       - ./db.sqlite3:/app/db.sqlite3
       - ./config.env:/app/djangomq/.env
+      - ./runner.sh:/app/runner.sh
     depends_on:
       - rabbitmq
       - consumer

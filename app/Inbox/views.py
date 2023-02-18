@@ -31,5 +31,6 @@ class InboxUserViewSet(
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
 ):
-    serializer_class = InboxSerializer
-    queryset = Inbox.objects.all()
+    serializer_class = InboxUserSerializer
+    queryset = InboxUser.objects.all()
+

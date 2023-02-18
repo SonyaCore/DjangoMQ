@@ -9,7 +9,6 @@ RUN apk add --no-cache python3 bash py3-pip && \
 
 COPY . /app
 RUN wget -O wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-RUN chmod +x runner.sh
 RUN chmod +x wait-for-it.sh
 RUN chmod +x consumer.py
 
